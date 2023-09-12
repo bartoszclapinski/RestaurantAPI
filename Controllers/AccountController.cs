@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantAPI.Models;
 using RestaurantAPI.Services;
 
 namespace RestaurantAPI.Controllers;
@@ -20,6 +21,13 @@ public class AccountController : ControllerBase
     {
         _accountService.RegisterUser(dto);
         return Ok();            
+    }
+    
+    [HttpPost("login")]
+    public ActionResult Login([FromBody] LoginDto dto)
+    {
+        string token = _accountService.GenerateJwt(dto);
+        return Ok(token);
     }
     
 }
