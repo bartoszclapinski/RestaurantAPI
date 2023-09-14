@@ -35,6 +35,11 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
     };
 });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("HasNationality", opt 
+                    => opt.RequireClaim("Nationality", "Polish", "English"));
+});
 
 builder.Host.UseNLog();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
