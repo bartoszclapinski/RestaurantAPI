@@ -2,11 +2,13 @@ using System.Reflection;
 using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using RestaurantAPI;
+using RestaurantAPI.Authorization;
 using RestaurantAPI.Controllers;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Middleware;
@@ -39,8 +41,11 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("HasNationality", opt 
                     => opt.RequireClaim("Nationality", "Polish", "English"));
+    options.AddPolicy("AtLeast20", opt 
+                    => opt.AddRequirements(new MinimumAgeRequirement(20)));
 });
 
+builder.Services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
 builder.Host.UseNLog();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
