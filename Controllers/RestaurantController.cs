@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -42,7 +43,8 @@ public class RestaurantController : ControllerBase
     [Authorize(Roles = "Admin,Manager")]
     public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
     {
-        var id = _restaurantService.Create(dto);
+        var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        var id = _restaurantService.Create(dto, userId);
         
         return Created($"/api/restaurant/{id}", null);
     }
@@ -50,7 +52,7 @@ public class RestaurantController : ControllerBase
     [HttpDelete("{id}")]
     public ActionResult DeleteRestaurant([FromRoute] int id)
     {
-        _restaurantService.Delete(id);
+        _restaurantService.Delete(id, User);
         
         return NoContent();
     }
@@ -58,7 +60,7 @@ public class RestaurantController : ControllerBase
     [HttpPut("{id}")]
     public ActionResult UpdateRestaurant([FromRoute] int id, [FromBody] UpdateRestaurantDto dto)
     {
-        _restaurantService.Update(id, dto);
+        _restaurantService.Update(id, dto, User);
         
         return Ok();
     }

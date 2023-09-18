@@ -1,6 +1,13 @@
-﻿namespace RestaurantAPI.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 
-public class ResourceOperationRequirement
+namespace RestaurantAPI.Authorization;
+
+public class ResourceOperationRequirement : IAuthorizationRequirement
 {
+    public ResourceOperationRequirement(ResourceOperation operation)
+    {
+        Operation = operation;
+    }
     
+    public ResourceOperation Operation { get; }
 }
