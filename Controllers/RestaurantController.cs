@@ -22,7 +22,7 @@ public class RestaurantController : ControllerBase
     }
     
     [HttpGet]
-    [Authorize(Policy = "AtLeast20")]
+    //[Authorize(Policy = "CreatedAtLeast2Restaurants")]
     public ActionResult<IEnumerable<RestaurantDto>> GetAll()
     {
         var restaurantsDto = _restaurantService.GetAll();

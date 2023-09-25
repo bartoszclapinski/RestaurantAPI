@@ -42,11 +42,15 @@ builder.Services.AddAuthorization(options =>
                     => opt.RequireClaim("Nationality", "Polish", "English"));
     options.AddPolicy("AtLeast20", opt 
                     => opt.AddRequirements(new MinimumAgeRequirement(20)));
+    options.AddPolicy("CreatedAtLeast2Restaurants", opt => opt.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));
 });
 
+builder.Services.AddScoped<IAuthorizationHandler, CreatedMultipleRestaurantsRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+
 builder.Host.UseNLog();
+
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
