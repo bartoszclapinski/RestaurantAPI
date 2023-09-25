@@ -22,15 +22,16 @@ public class RestaurantController : ControllerBase
     }
     
     [HttpGet]
+    [AllowAnonymous]
     //[Authorize(Policy = "CreatedAtLeast2Restaurants")]
-    public ActionResult<IEnumerable<RestaurantDto>> GetAll()
+    public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery] RestaurantQuery query)
     {
-        var restaurantsDto = _restaurantService.GetAll();
+        var restaurantsDto = _restaurantService.GetAll(query);
         
         return Ok(restaurantsDto);   
     }
     
-    [AllowAnonymous]
+    
     [HttpGet("{id}")]
     public ActionResult<RestaurantDto> Get([FromRoute] int id)
     {
