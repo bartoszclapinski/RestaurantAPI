@@ -16,18 +16,21 @@ public class RestaurantService : IRestaurantService
     private readonly IMapper _mapper;
     private readonly ILogger<RestaurantService> _logger;
     private readonly IAuthorizationService _authorizationService;
+    private readonly IUserContextService _userContextService;
     private IRestaurantService _restaurantServiceImplementation;
 
     public RestaurantService(
                     RestaurantDbContext dbContext, 
                     IMapper mapper, 
                     ILogger<RestaurantService> logger,
-                    IAuthorizationService authorizationService)
+                    IAuthorizationService authorizationService,
+                    IUserContextService userContextService)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _authorizationService = authorizationService ?? throw new ArgumentNullException(nameof(authorizationService));
+        _userContextService = userContextService ?? throw new ArgumentNullException(nameof(userContextService));
     }
     
     public RestaurantDto GetById(int id)
@@ -56,17 +59,17 @@ public class RestaurantService : IRestaurantService
         return restaurantsDto;
     }
     
-    public int Create(CreateRestaurantDto dto, int userId)
+    public int Create(CreateRestaurantDto dto)
     {
         var restaurant = _mapper.Map<Restaurant>(dto);
-        restaurant.CreatedById = userId;
+        restaurant.CreatedById = _userContextService.GetUserId;
         _dbContext.Restaurants.Add(restaurant);
         _dbContext.SaveChanges();
 
         return restaurant.Id;
     }
     
-    public void Delete(int id, ClaimsPrincipal user)
+    public void Delete(int id)
     {
         _logger.LogError("Restaurant with id: {Id} DELETE action invoked", id);
         
@@ -74,7 +77,7 @@ public class RestaurantService : IRestaurantService
         if (restaurant is null) throw new NotFoundException("Restaurant not found.");
         
         var authorizationResult = _authorizationService
-                        .AuthorizeAsync(user, restaurant, new ResourceOperationRequirement(ResourceOperation.Delete))
+                        .AuthorizeAsync(_userContextService.User, restaurant, new ResourceOperationRequirement(ResourceOperation.Delete))
                         .Result;
         
         if (!authorizationResult.Succeeded)
@@ -87,13 +90,13 @@ public class RestaurantService : IRestaurantService
         
     }
 
-    public void Update(int id, UpdateRestaurantDto dto, ClaimsPrincipal user)
+    public void Update(int id, UpdateRestaurantDto dto)
     {
         var restaurant = _dbContext.Restaurants.FirstOrDefault(r => r.Id == id);
         if (restaurant is null) throw new NotFoundException("Restaurant not found.");
 
         var authorizationResult = _authorizationService
-                        .AuthorizeAsync(user, restaurant, new ResourceOperationRequirement(ResourceOperation.Update))
+                        .AuthorizeAsync(_userContextService.User, restaurant, new ResourceOperationRequirement(ResourceOperation.Update))
                         .Result;
         
         if (!authorizationResult.Succeeded)

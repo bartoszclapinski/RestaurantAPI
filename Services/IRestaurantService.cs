@@ -8,7 +8,7 @@ public interface IRestaurantService
 {
     RestaurantDto GetById(int id);
     IEnumerable<RestaurantDto> GetAll();
-    int Create(CreateRestaurantDto dto, int userId);
-    void Delete(int id, ClaimsPrincipal user);
-    void Update(int id, UpdateRestaurantDto dto, ClaimsPrincipal user);
+    int Create(CreateRestaurantDto dto);
+    void Delete(int id);
+    void Update(int id, UpdateRestaurantDto dto);
 }
