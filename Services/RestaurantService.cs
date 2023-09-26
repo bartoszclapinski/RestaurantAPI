@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Linq.Expressions;
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,23 @@ public class RestaurantService : IRestaurantService
                         .Include(r => r.Address)
                         .Include(r => r.Dishes)
                         .Where(r => query.searchPhrase == null || (r.Name.ToLower().Contains(query.searchPhrase.ToLower()) || r.Description.ToLower().Contains(query.searchPhrase.ToLower())));
+
+        if (!string.IsNullOrEmpty(query.SortBy))
+        {
+            var columnsSelector = new Dictionary<string, Expression<Func<Restaurant, object>>>
+            {
+                { nameof(Restaurant.Name), r => r.Name },
+                { nameof(Restaurant.Description), r => r.Description },
+                { nameof(Restaurant.Category), r => r.Category }
+            };
+            
+            var selectedColumn = columnsSelector[query.SortBy];
+            
+            baseQuery = query.SortDirection == SortDirection.ASC
+                            ? baseQuery.OrderBy(selectedColumn)
+                            : baseQuery.OrderByDescending(selectedColumn);
+
+        }
         
         var restaurants = baseQuery
                         .Skip(query.PageSize * (query.PageNumber - 1))
