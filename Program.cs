@@ -11,6 +11,7 @@ using RestaurantAPI.Authorization;
 using RestaurantAPI.Controllers;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Middleware;
+using RestaurantAPI.Models;
 using RestaurantAPI.Models.Validators;
 using RestaurantAPI.Profiles;
 using RestaurantAPI.Services;
@@ -55,6 +56,7 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IValidator<RestaurantQuery>, RestaurantQueryValidator>();
 
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
