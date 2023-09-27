@@ -72,11 +72,21 @@ builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendClient", opt =>
+        opt.AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithOrigins(builder.Configuration.GetValue<string>("AllowedOrigins") ?? string.Empty)
+            .WithExposedHeaders("WWW-Authenticate")
+            .AllowCredentials());
+});
 
 
 var app = builder.Build();
 app.UseMiddleware<RequestTimeMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseCors("FrontendClient");
 
 using (var scope = app.Services.CreateScope())
 { 
