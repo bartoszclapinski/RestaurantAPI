@@ -72,6 +72,8 @@ builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendClient", opt =>
@@ -84,6 +86,8 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+app.UseStaticFiles();
 app.UseMiddleware<RequestTimeMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseCors("FrontendClient");
