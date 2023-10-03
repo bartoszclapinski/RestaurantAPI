@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RestaurantAPI.Entities;
 
 namespace RestaurantAPI.Services;
@@ -15,6 +16,13 @@ public class RestaurantSeeder
     public void Seed()
     {
         if (!_dbContext.Database.CanConnect()) return;
+        
+        var pendingMigrations = _dbContext.Database.GetPendingMigrations();
+        if (pendingMigrations != null && pendingMigrations.Any())
+        {
+            _dbContext.Database.Migrate();
+        }
+        
         
         if (!_dbContext.Roles.Any())
         {
