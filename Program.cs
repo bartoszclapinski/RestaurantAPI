@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using RestaurantAPI;
@@ -60,7 +61,8 @@ builder.Services.AddScoped<IValidator<RestaurantQuery>, RestaurantQueryValidator
 
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
-builder.Services.AddDbContext<RestaurantDbContext>();
+builder.Services.AddDbContext<RestaurantDbContext>(options => 
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<RestaurantSeeder>();
 builder.Services.AddAutoMapper(typeof(RestaurantProfile));
 
