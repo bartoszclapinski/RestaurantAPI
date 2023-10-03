@@ -25,4 +25,22 @@ public class FileController : ControllerBase
 
         return File(content, contentType, fileName);
     }
+
+    
+    [HttpPost]
+    public ActionResult Upload([FromForm] IFormFile file)
+    {
+        if (file is { Length: > 0 })
+        {
+            var rootPath = Directory.GetCurrentDirectory();
+            var fileName = file.FileName;
+            var fullPath = $"{rootPath}/PrivateFiles/{fileName}";
+            using var stream = new FileStream(fullPath, FileMode.Create);
+            file.CopyTo(stream);
+
+            return Ok();
+        }
+
+        return BadRequest();
+    }
 }
