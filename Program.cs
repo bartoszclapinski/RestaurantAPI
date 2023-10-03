@@ -87,6 +87,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseResponseCaching();
 app.UseStaticFiles();
 app.UseMiddleware<RequestTimeMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
