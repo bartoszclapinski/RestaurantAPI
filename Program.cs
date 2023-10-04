@@ -61,8 +61,10 @@ builder.Services.AddScoped<IValidator<RestaurantQuery>, RestaurantQueryValidator
 
 builder.Services.AddControllers();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
-builder.Services.AddDbContext<RestaurantDbContext>(options => 
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDbContext<RestaurantDbContext>
+    (options => options.UseSqlServer(builder.Configuration.GetConnectionString("RestaurantDbConnection")));
+
 builder.Services.AddScoped<RestaurantSeeder>();
 builder.Services.AddAutoMapper(typeof(RestaurantProfile));
 
