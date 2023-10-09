@@ -1,6 +1,4 @@
-on:
-  push:
-    branches: [ master-pipeline ]
+on:  
   pull_request:
     branches: [ master-pipline ]
   workflow_dispatch:
