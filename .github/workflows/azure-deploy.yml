@@ -1,6 +1,6 @@
 on:
     push:
-      branches: [ master-pipeline ]
+      branches: [ master ]
   
 jobs:
     build:
@@ -22,7 +22,7 @@ jobs:
         - name: Upload Artifact
           uses: actions/upload-artifact@v3.1.3
           with: 
-            name: api-artifact
+            name: api-artifact 
             path: ${{ env.DOTNET_ROOT }}/api  
           
     deploy-dev:
