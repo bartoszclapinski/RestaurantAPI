@@ -1,6 +1,6 @@
 on:
     push:
-      branches: [ master-pipline ]
+      branches: [ master ]
   
 jobs:
     build:
