@@ -20,6 +20,7 @@ using RestaurantAPI.Services;
 var builder = WebApplication.CreateBuilder(args);
 var authenticationSettings = new AuthenticationSettings();
 
+// Auth
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddAuthentication(options =>
