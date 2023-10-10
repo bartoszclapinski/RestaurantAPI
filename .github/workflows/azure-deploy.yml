@@ -1,6 +1,6 @@
 on:
     push:
-      branches: [ master ]
+      branches: [ master-pipline ]
   
 jobs:
     build:
@@ -18,7 +18,7 @@ jobs:
         - name: Test
           run: dotnet test
         - name: Publish
-          run: dotnet publish ./RestuarantAPI.csproj -c Release -o ${{ env.DOTNET_ROOT }}/api
+          run: dotnet publish ./RestaurantAPI.csproj -c Release -o ${{ env.DOTNET_ROOT }}/api
         - name: Upload Artifact
           uses: actions/upload-artifact@v3.1.3
           with: 
